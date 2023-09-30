@@ -1,15 +1,7 @@
 public abstract class Pieza {
-
-    public enum Tipo {
-        NINGUNA,
-        REINA,
-        TORRE
-    }
-
     protected final int _x;
     protected int _y;
     protected final Pieza _vecina;
-    protected Tipo _tipo = Tipo.NINGUNA;
 
     public static boolean PRIMERA_NO_PUEDE_AVANZAR = false;
 
@@ -22,7 +14,7 @@ public abstract class Pieza {
     public int getX() { return _x; }
     public int getY() { return _y; }
 
-    public Tipo getTipo() { return _tipo; }
+    public abstract char getRepresentacion();
 
     public void primera() {
         // comprobar si tengo vecina

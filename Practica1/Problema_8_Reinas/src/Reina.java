@@ -2,7 +2,11 @@ public class Reina extends Pieza {
 
     public Reina(int x, int y, Pieza vecina) {
         super(x, y, vecina);
-        _tipo = Tipo.REINA;
+    }
+
+    @Override
+    public char getRepresentacion() {
+        return 'Q';
     }
 
     @Override

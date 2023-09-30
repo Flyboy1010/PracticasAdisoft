@@ -14,12 +14,7 @@ public class Main {
 
         // Colocar las reinas en el tablero
         for (Pieza pieza : piezas) {
-            char caracterPieza = ' ';
-
-            switch (pieza.getTipo()) {
-                case REINA -> caracterPieza = 'Q';
-                case TORRE -> caracterPieza = 'T';
-            }
+            char caracterPieza = pieza.getRepresentacion();
 
             tablero[7 - (pieza.getY() - 1)][pieza.getX() - 1] = caracterPieza;
         }

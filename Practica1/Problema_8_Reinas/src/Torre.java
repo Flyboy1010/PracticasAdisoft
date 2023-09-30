@@ -2,7 +2,11 @@ public class Torre extends Pieza {
 
     public Torre(int x, int y, Pieza vecina) {
         super(x, y, vecina);
-        _tipo = Tipo.TORRE;
+    }
+
+    @Override
+    public char getRepresentacion() {
+        return 'T';
     }
 
     @Override
