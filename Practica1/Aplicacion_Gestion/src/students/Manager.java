@@ -102,42 +102,82 @@ public class Manager {
 
     // parse student
 
-    private static Student parseStudentString(String studentString) {
+    private static Student stringToStudent(String studentString) {
         // split into student fields
 
-        String[] studentFields = studentString.split(",");
+        String[] fields = studentString.split(",");
 
         // parse student fields
 
-        int studentNIA = Integer.parseInt(studentFields[0]);
-        String studentName = studentFields[1];
-        ArrayList<Integer> studentSubjectsIDs = null;
+        int nia = Integer.parseInt(fields[0]);
+        String name = fields[1];
+        ArrayList<Integer> subjectsIDs = null;
 
-        if (studentFields.length > 2) {
-            studentSubjectsIDs = new ArrayList<>();
-            String[] studentSubjectsStringIDs = studentFields[2].split("-");
+        if (fields.length > 2) {
+            subjectsIDs = new ArrayList<>();
+            String[] subjectsIDsString = fields[2].split("-");
 
-            for (String subjectStringID : studentSubjectsStringIDs) {
-                studentSubjectsIDs.add(Integer.parseInt(subjectStringID));
+            for (String subjectIDString : subjectsIDsString) {
+                subjectsIDs.add(Integer.parseInt(subjectIDString));
             }
         }
 
         // create new student
 
-        return new Student(studentName, studentNIA, studentSubjectsIDs);
+        return new Student(name, nia, subjectsIDs);
     }
 
-    private static Subject parseSubjectString(String subjectString) {
+    private static Subject stringToSubject(String subjectString) {
         // split into subject fields
 
-        String[] subjectFields = subjectString.split(",");
+        String[] fields = subjectString.split(",");
 
         // parse subject fields
 
-        int subjectID = Integer.parseInt(subjectFields[0]);
-        String subjectName = subjectFields[1];
+        int id = Integer.parseInt(fields[0]);
+        String name = fields[1];
+        ArrayList<Integer> studentsIDs = null;
 
-        return new Subject(subjectName, subjectID);
+        if (fields.length > 2) {
+            studentsIDs = new ArrayList<>();
+            String[] studentsIDsString = fields[2].split("-");
+
+            for (String studentIDString : studentsIDsString) {
+                studentsIDs.add(Integer.parseInt(studentIDString));
+            }
+        }
+
+        return new Subject(name, id, studentsIDs);
+    }
+
+    /* Me gustaria declarle mi amor pero solo puedo declarar variables :( */
+
+    private static String studentToString(Student student) {
+        StringBuilder studentString = new StringBuilder();
+
+        // nia and name
+
+        studentString.append(student.getName())
+                .append(',')
+                .append(student.getName())
+                .append(',');
+
+        // subjects ids
+
+        for (int subjectID : student.getSubjectsIDs()) {
+            studentString.append(subjectID)
+                    .append('-');
+        }
+
+        // remove last '-'
+
+        studentString.deleteCharAt(studentString.length() - 1);
+
+        return studentString.toString();
+    }
+
+    private static String subjectToString(Subject subject) {
+        return null;
     }
 
     // read subjects file
@@ -156,7 +196,7 @@ public class Manager {
                 if (!line.isEmpty()) {
                     // parse the student and put it in a hashmap
 
-                    Subject subject = parseSubjectString(line);
+                    Subject subject = stringToSubject(line);
                     _subjects.put(subject.getID(), subject);
                 }
             }
@@ -182,7 +222,7 @@ public class Manager {
                 if (!line.isEmpty()) {
                     // parse the student and put it in a hashmap
 
-                    Student student = parseStudentString(line);
+                    Student student = stringToStudent(line);
                     _students.put(student.getNIA(), student);
                 }
             }
@@ -203,7 +243,26 @@ public class Manager {
             for (HashMap.Entry<Integer, Student> entry : _students.entrySet()) {
                 Student student = entry.getValue();
 
-                writer.write(student.toString() + '\n');
+                writer.write(studentToString(student)+ '\n');
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // save subjects file
+
+    public void saveSubjectsFile(String filePath) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+
+            // write students
+
+            for (HashMap.Entry<Integer, Subject> entry : _subjects.entrySet()) {
+                Subject subject = entry.getValue();
+
+
             }
 
         } catch (IOException e) {

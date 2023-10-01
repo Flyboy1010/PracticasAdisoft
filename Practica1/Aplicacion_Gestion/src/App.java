@@ -72,6 +72,9 @@ public class App {
             case 'r':
                 promptRemoveStudent();
                 break;
+            case 's':
+                _manager.saveStudentsFile("data/students.txt");
+                break;
             case 'q':
                 _running = false;
                 break;
