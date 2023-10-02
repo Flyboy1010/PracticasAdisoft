@@ -26,11 +26,15 @@ public class Subject {
         return _studentsNIAs;
     }
 
-    public void addStudent(int studentNIA) {
+    protected void addStudent(int studentNIA) {
+        int index = _studentsNIAs.indexOf(studentNIA);
 
+        if (index == -1) {
+            _studentsNIAs.add(studentNIA);
+        }
     }
 
-    public void removeStudent(int studentNIA) {
-
+    protected void removeStudent(int studentNIA) {
+        _studentsNIAs.remove(Integer.valueOf(studentNIA));
     }
 }

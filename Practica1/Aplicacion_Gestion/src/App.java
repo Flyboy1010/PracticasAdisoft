@@ -74,6 +74,7 @@ public class App {
                 break;
             case 's':
                 _manager.saveStudentsFile("data/students.txt");
+                _manager.saveSubjectsFile("data/subjects.txt");
                 break;
             case 'q':
                 _running = false;

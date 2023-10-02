@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Student {
-    private String _name;
-    private int _nia;
+    private final String _name;
+    private final int _nia;
     private ArrayList<Integer> _subjectsIDs;
 
     public Student(String name, int nia, ArrayList<Integer> subjectsIDs) {
