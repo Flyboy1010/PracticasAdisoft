@@ -3,10 +3,19 @@
 
 import students.Manager;
 import students.Student;
+import students.Subject;
 
 import java.util.Scanner;
 
 public class App {
+
+    private static final char COMMAND_HELP = 'h';
+    private static final char COMMAND_LIST = 'l';
+    private static final char COMMAND_FIND = 'f';
+    private static final char COMMAND_ADD = 'a';
+    private static final char COMMAND_REMOVE = 'r';
+    private static final char COMMAND_SAVE = 's';
+    private static final char COMMAND_QUIT = 'q';
 
     private Scanner _input = new Scanner(System.in);
     private Manager _manager = new Manager();
@@ -15,11 +24,13 @@ public class App {
     public App() {
         // load student and subject files
 
-        _manager.readStudentsFile("data/students.txt");
         _manager.readSubjectsFile("data/subjects.txt");
+        _manager.readStudentsFile("data/students.txt");
     }
 
     private void printHelp() {
+        // prints all the commands
+
         System.out.println("Command list:");
         System.out.println("\t'l' lists all students");
         System.out.println("\t'f' find student by NIA");
@@ -28,55 +39,132 @@ public class App {
     }
 
     private void promptFindStudent() {
-        System.out.print("Introduce student NIA: ");
+        // get nia as input
 
+        System.out.print("Introduce student NIA: ");
         int nia = Integer.parseInt(_input.nextLine());
 
-        _manager.printStudentInfo(nia);
+        // find the student
+
+        Student student = _manager.findStudent(nia);
+
+        // check if it was found
+
+        if (student != null) {
+            student.prettyPrint();
+        } else {
+            System.out.println("Student not found!");
+        }
     }
 
     private void promptAddStudent() {
+        // get name & nia as input
+
         System.out.print("Introduce new student name: ");
         String name = _input.nextLine();
         System.out.print("Introduce new student NIA: ");
         int nia = Integer.parseInt(_input.nextLine());
 
-        _manager.addStudent(new Student(name, nia, null));
+        // add newly created student
+
+        _manager.addStudent(new Student(name, nia));
     }
 
     private void promptRemoveStudent() {
+        // get nia as input
+
         System.out.print("Introduce student NIA: ");
         int nia = Integer.parseInt(_input.nextLine());
 
-        _manager.removeStudent(nia);
+        // find the student
+
+        Student student = _manager.findStudent(nia);
+
+        // check if was found
+
+        if (student != null) {
+            _manager.removeStudent(student);
+
+            System.out.print("Removed: ");
+            student.print();
+        } else {
+            System.out.println("Student not found!");
+        }
+    }
+    
+    private void promptAddSubjectToStudent() {
+        // get student nia as input
+
+        System.out.print("Introduce student NIA: ");
+        int nia = Integer.parseInt(_input.nextLine());
+
+        // find student
+
+        Student student = _manager.findStudent(nia);
+
+        // check if found
+
+        if (student != null) {
+            // pretty print student
+
+            student.prettyPrint();
+
+            // get subject id as input
+
+            System.out.print("Introduce subject ID: ");
+            int id = Integer.parseInt(_input.nextLine());
+
+            // find subject
+
+            Subject subject = _manager.findSubject(id);
+
+            // check if found
+
+            if (subject != null) {
+                // add it to the student
+
+                student.addSubject(subject);
+
+                // feedback msg
+
+                System.out.println("Subject added!");
+            } else {
+                System.out.println("Subject not found!");
+            }
+        } else {
+            System.out.println("Student not found!");
+        }
     }
 
     private void promptSelectAction() {
-        System.out.print("Introduce command, 'h' for help: ");
+        // get command as input
 
+        System.out.print("Introduce command, 'h' for help: ");
         char command = Character.toLowerCase(_input.nextLine().charAt(0));
 
+        // action for each command
+
         switch (command) {
-            case 'h':
+            case COMMAND_HELP:
                 printHelp();
                 break;
-            case 'l':
-                _manager.printAllStudentsBasicInfo();
+            case COMMAND_LIST:
+                _manager.printStudents();
                 break;
-            case 'f':
+            case COMMAND_FIND:
                 promptFindStudent();
                 break;
-            case 'a':
+            case COMMAND_ADD:
                 promptAddStudent();
                 break;
-            case 'r':
+            case COMMAND_REMOVE:
                 promptRemoveStudent();
                 break;
-            case 's':
-                _manager.saveStudentsFile("data/students.txt");
+            case COMMAND_SAVE:
                 _manager.saveSubjectsFile("data/subjects.txt");
+                _manager.saveStudentsFile("data/students.txt");
                 break;
-            case 'q':
+            case COMMAND_QUIT:
                 _running = false;
                 break;
             default:

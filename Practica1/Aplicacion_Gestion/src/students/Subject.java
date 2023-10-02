@@ -6,12 +6,12 @@ import java.util.Objects;
 public class Subject {
     private final String _name;
     private final int _id;
-    private ArrayList<Integer> _studentsNIAs;
+    private ArrayList<Student> _students;
 
-    public Subject(String name, int id, ArrayList<Integer> studentsNIAs) {
+    public Subject(String name, int id) {
         _name = name;
         _id = id;
-        _studentsNIAs = Objects.requireNonNullElseGet(studentsNIAs, ArrayList::new);
+        _students = new ArrayList<>();
     }
 
     public String getName() {
@@ -22,19 +22,34 @@ public class Subject {
         return _id;
     }
 
-    public ArrayList<Integer> getStudentsNIAs() {
-        return _studentsNIAs;
+    public ArrayList<Student> getStudentsNIAs() {
+        return _students;
     }
 
-    protected void addStudent(int studentNIA) {
-        int index = _studentsNIAs.indexOf(studentNIA);
+    protected void addStudent(Student student) {
+        boolean alreadyAdded = _students.contains(student);
 
-        if (index == -1) {
-            _studentsNIAs.add(studentNIA);
+        if (!alreadyAdded) {
+            _students.add(student);
         }
     }
 
-    protected void removeStudent(int studentNIA) {
-        _studentsNIAs.remove(Integer.valueOf(studentNIA));
+    protected void removeStudent(Student student) {
+        _students.remove(student);
+    }
+
+    public void print() {
+        System.out.println("ID: " + _id + ", NAME: " + _name);
+    }
+
+    public void prettyPrint() {
+        System.out.println("NAME: " + _name);
+        System.out.println("ID: " + _id);
+        System.out.println("STUDENTS: ");
+
+        for (Student student : _students) {
+            System.out.print('\t');
+            student.print();
+        }
     }
 }

@@ -7,13 +7,12 @@ import java.util.HashMap;
 public class Manager {
 
     private static final char SEPARATOR_FIELD = ',';
-    private static final char SEPARATOR_NIA = '-';
     private static final char SEPARATOR_ID = '-';
 
     private HashMap<Integer, Subject> _subjects = new HashMap<>();
     private HashMap<Integer, Student> _students = new HashMap<>();
 
-    // subject
+    // find subject
 
     public Subject findSubject(int subjectID) {
         if (_subjects.containsKey(subjectID)) {
@@ -23,13 +22,7 @@ public class Manager {
         return null;
     }
 
-    // add, find, remove student
-
-    public void addStudent(Student student) { // adds student
-        if (student != null) {
-            _students.put(student.getNIA(), student);
-        }
-    }
+    // find, add, remove student
 
     public Student findStudent(int studentNIA) { // returns student, null if not found
         if (_students.containsKey(studentNIA)) {
@@ -39,54 +32,18 @@ public class Manager {
         return null;
     }
 
-    public boolean removeStudent(int studentNIA) { // returns true if successfully removed
-        Student student = findStudent(studentNIA);
-
-        if (student != null) {
-            _students.remove(studentNIA);
-            return true;
-        }
-
-        return false;
+    public void addStudent(Student student) { // adds student
+        _students.put(student.getNIA(), student);
     }
 
-    public void studentAddSubject(int studentNIA, int subjectID) {
-        Student student = findStudent(studentNIA);
-        Subject subject = findSubject(subjectID);
-
-        if (student != null) student.addSubject(subjectID);
-        if (subject != null) subject.addStudent(studentNIA);
+    public void removeStudent(Student student) {
+        student.clearSubjects();
+        _students.remove(student.getNIA());
     }
 
-    public void studentRemoveSubject(int studentNIA, int subjectID) {
-        Student student = findStudent(studentNIA);
-        Subject subject = findSubject(subjectID);
+    // print all students
 
-        if (student != null) student.removeSubject(subjectID);
-        if (subject != null) subject.removeStudent(studentNIA);
-    }
-
-    // print student info
-
-    public void printStudentInfo(int studentNIA) {
-        Student student = findStudent(studentNIA);
-
-        if (student != null) {
-            System.out.println("NAME: " + student.getName());
-            System.out.println("NIA: " + student.getNIA());
-            System.out.println("SUBJECTS: ");
-
-            for (int subjectID : student.getSubjectsIDs()) {
-                Subject subject = findSubject(subjectID);
-
-                if (subject != null) {
-                    System.out.println("\tID: " + subject.getID() + ", NAME: " + subject.getName());
-                }
-            }
-        }
-    }
-
-    public void printAllStudentsBasicInfo() {
+    public void printStudents() {
         for (HashMap.Entry<Integer, Student> entry : _students.entrySet()) {
             // get student
 
@@ -94,63 +51,78 @@ public class Manager {
 
             // print just nia and name
 
-            System.out.println("NIA: " + student.getNIA() + ", NAME: " + student.getName());
+            student.print();
+        }
+    }
+
+    // print subjects
+
+    public void printSubjects() {
+        for (HashMap.Entry<Integer, Subject> entry : _subjects.entrySet()) {
+            // get subject
+
+            Subject subject = entry.getValue();
+
+            // print just id and name
+
+            subject.print();
         }
     }
 
     // parse student
 
-    private static Student stringToStudent(String studentString) {
+    private Student stringToStudent(String studentString) {
         // split into student fields
 
         String[] fields = studentString.split(String.valueOf(SEPARATOR_FIELD));
 
-        // parse student fields
+        // parse basic student fields
 
         int nia = Integer.parseInt(fields[0]);
         String name = fields[1];
-        ArrayList<Integer> subjectsIDs = null;
+
+        // create student
+
+        Student student = new Student(name, nia);
+
+        // parse subjects
 
         if (fields.length > 2) {
-            subjectsIDs = new ArrayList<>();
             String[] subjectsIDsString = fields[2].split(String.valueOf(SEPARATOR_ID));
 
             for (String subjectIDString : subjectsIDsString) {
-                subjectsIDs.add(Integer.parseInt(subjectIDString));
+                int subjectID = Integer.parseInt(subjectIDString);
+                Subject subject = findSubject(subjectID);
+
+                if (subject != null) {
+                    student.addSubject(subject);
+                }
             }
         }
 
-        // create new student
+        //
 
-        return new Student(name, nia, subjectsIDs);
+        return student;
     }
 
-    private static Subject stringToSubject(String subjectString) {
+    private Subject stringToSubject(String subjectString) {
         // split into subject fields
 
         String[] fields = subjectString.split(String.valueOf(SEPARATOR_FIELD));
 
-        // parse subject fields
+        // parse basic subject fields
 
         int id = Integer.parseInt(fields[0]);
         String name = fields[1];
-        ArrayList<Integer> studentsNIAs = null;
 
-        if (fields.length > 2) {
-            studentsNIAs = new ArrayList<>();
-            String[] studentsNIAsString = fields[2].split(String.valueOf(SEPARATOR_NIA));
+        // create subject
 
-            for (String studentNIAString : studentsNIAsString) {
-                studentsNIAs.add(Integer.parseInt(studentNIAString));
-            }
-        }
-
-        return new Subject(name, id, studentsNIAs);
+        return new Subject(name, id);
     }
 
     /* Me gustaria declarle mi amor pero solo puedo declarar variables :( */
 
-    private static String studentToString(Student student) {
+    private String studentToString(Student student) {
         StringBuilder studentString = new StringBuilder();
 
         // nia and name
@@ -161,13 +133,13 @@ public class Manager {
 
         // subjects ids
 
-        ArrayList<Integer> subjectsIDs = student.getSubjectsIDs();
+        ArrayList<Subject> subjects = student.getSubjects();
 
-        if (!subjectsIDs.isEmpty()) {
+        if (!subjects.isEmpty()) {
             studentString.append(SEPARATOR_FIELD);
 
-            for (int subjectID : student.getSubjectsIDs()) {
-                studentString.append(subjectID)
+            for (Subject subject : subjects) {
+                studentString.append(subject.getID())
                         .append(SEPARATOR_ID);
             }
 
@@ -179,33 +151,10 @@ public class Manager {
         return studentString.toString();
     }
 
-    private static String subjectToString(Subject subject) {
-        StringBuilder subjectString = new StringBuilder();
-
+    private String subjectToString(Subject subject) {
         // id and name
 
-        subjectString.append(subject.getID())
-                .append(SEPARATOR_FIELD)
-                .append(subject.getName());
-
-        // student nias
-
-        ArrayList<Integer> studentsNIAs = subject.getStudentsNIAs();
-
-        if (!studentsNIAs.isEmpty()) {
-            subjectString.append(SEPARATOR_FIELD);
-
-            for (int studentNIA : subject.getStudentsNIAs()) {
-                subjectString.append(studentNIA)
-                        .append(SEPARATOR_NIA);
-            }
-
-            // remove last separator
-
-            subjectString.deleteCharAt(subjectString.length() - 1);
-        }
-
-        return subjectString.toString();
+        return String.valueOf(subject.getID()) + SEPARATOR_FIELD + subject.getName();
     }
 
     // read subjects file

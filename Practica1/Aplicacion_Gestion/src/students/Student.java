@@ -1,18 +1,17 @@
 package students;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Student {
     private final String _name;
     private final int _nia;
-    private ArrayList<Integer> _subjectsIDs;
+    private ArrayList<Subject> _subjects;
 
-    public Student(String name, int nia, ArrayList<Integer> subjectsIDs) {
+    public Student(String name, int nia) {
         _name = name;
         _nia = nia;
 
-        _subjectsIDs = Objects.requireNonNullElseGet(subjectsIDs, ArrayList::new);
+        _subjects = new ArrayList<>();
     }
 
     public String getName() {
@@ -23,23 +22,43 @@ public class Student {
         return _nia;
     }
 
-    public ArrayList<Integer> getSubjectsIDs() {
-        return _subjectsIDs;
+    public ArrayList<Subject> getSubjects() {
+        return _subjects;
     }
 
-    protected boolean addSubject(int subjectID) { // returns true if success
-        int index = _subjectsIDs.indexOf(subjectID);
+    public void addSubject(Subject subject) { // returns true if success
+        boolean alreadyAdded = _subjects.contains(subject);
 
-        // check if is not in the list
+        if (!alreadyAdded) {
+            _subjects.add(subject);
+            subject.addStudent(this);
+        }
+    }
 
-        if (index == -1) {
-            _subjectsIDs.add(subjectID);
+    public void removeSubject(Subject subject) { // returns true if success
+        _subjects.remove(subject);
+        subject.removeStudent(this);
+    }
+
+    public void clearSubjects() {
+        for (Subject subject : _subjects) {
+            subject.removeStudent(this);
         }
 
-        return index == -1;
+        _subjects.clear();
     }
 
-    protected boolean removeSubject(int subjectID) { // returns true if success
-        return _subjectsIDs.remove(Integer.valueOf(subjectID));
+    public void print() {
+        System.out.println("NIA: " + _nia + ", NAME: " + _name);
+    }
+
+    public void prettyPrint() {
+        System.out.println("NAME: " + _name);
+        System.out.println("NIA: " + _nia);
+        System.out.println("SUBJECTS: ");
+
+        for (Subject subject : _subjects) {
+            System.out.println("\tID: " + subject.getID() + ", NAME: " + subject.getName());
+        }
     }
 }
