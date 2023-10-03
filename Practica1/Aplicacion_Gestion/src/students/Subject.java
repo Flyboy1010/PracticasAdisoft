@@ -1,7 +1,6 @@
 package students;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Subject {
     private final String _name;
@@ -22,7 +21,7 @@ public class Subject {
         return _id;
     }
 
-    public ArrayList<Student> getStudentsNIAs() {
+    public ArrayList<Student> getStudents() {
         return _students;
     }
 

@@ -9,20 +9,24 @@ import java.util.Scanner;
 
 public class App {
 
-    private static final char COMMAND_HELP = 'h';
-    private static final char COMMAND_LIST = 'l';
-    private static final char COMMAND_FIND = 'f';
-    private static final char COMMAND_ADD = 'a';
-    private static final char COMMAND_REMOVE = 'r';
-    private static final char COMMAND_SAVE = 's';
-    private static final char COMMAND_QUIT = 'q';
+    private static final String COMMAND_HELP = "h";
+    private static final String COMMAND_LIST = "l";
+    private static final String COMMAND_FIND = "f";
+    private static final String COMMAND_ADD = "a";
+    private static final String COMMAND_REMOVE = "r";
+    private static final String COMMAND_ADD_SUBJECT_TO_STUDENT = "m";
+    private static final String COMMAND_REMOVE_SUBJECT_FROM_STUDENT = "d";
+    private static final String COMMAND_SAVE = "s";
+    private static final String COMMAND_QUIT = "q";
+    private static final String COMMAND_LIST_SUBJECTS = "ls";
+    private static final String COMMAND_FIND_SUBJECT = "fs";
 
     private Scanner _input = new Scanner(System.in);
     private Manager _manager = new Manager();
     private boolean _running = true;
 
     public App() {
-        // load student and subject files
+        // load subject & student files, (the order is important, do not change)
 
         _manager.readSubjectsFile("data/subjects.txt");
         _manager.readStudentsFile("data/students.txt");
@@ -32,10 +36,16 @@ public class App {
         // prints all the commands
 
         System.out.println("Command list:");
-        System.out.println("\t'l' lists all students");
-        System.out.println("\t'f' find student by NIA");
-        System.out.println("\t'a' adds student");
-        System.out.println("\t'r' removes student");
+        System.out.println("\t'l'  lists all students");
+        System.out.println("\t'f'  finds student by NIA");
+        System.out.println("\t'a'  adds student");
+        System.out.println("\t'r'  removes student");
+        System.out.println("\t'm'  adds subject to student");
+        System.out.println("\t'd'  removes subject from student");
+        System.out.println("\t'ls' lists all subjects");
+        System.out.println("\t'fs' finds subject by ID");
+        System.out.println("\t's'  saves modifications");
+        System.out.println("\t'q'  quits");
     }
 
     private void promptFindStudent() {
@@ -91,7 +101,7 @@ public class App {
             System.out.println("Student not found!");
         }
     }
-    
+
     private void promptAddSubjectToStudent() {
         // get student nia as input
 
@@ -123,11 +133,66 @@ public class App {
             if (subject != null) {
                 // add it to the student
 
-                student.addSubject(subject);
+                boolean success = student.addSubject(subject);
 
                 // feedback msg
 
-                System.out.println("Subject added!");
+                if (success) {
+                    System.out.println("Subject added!");
+                } else {
+                    System.out.println("The student already has that subject!");
+                }
+
+            } else {
+                System.out.println("Subject not found!");
+            }
+
+        } else {
+            System.out.println("Student not found!");
+        }
+    }
+
+    private void promptRemoveSubjectFromStudent() {
+        // get student nia as input
+
+        System.out.print("Introduce student NIA: ");
+        int nia = Integer.parseInt(_input.nextLine());
+
+        // find student
+
+        Student student = _manager.findStudent(nia);
+
+        // check if found
+
+        if (student != null) {
+            // pretty print student
+
+            student.prettyPrint();
+
+            // get subject id as input
+
+            System.out.print("Introduce subject ID: ");
+            int id = Integer.parseInt(_input.nextLine());
+
+            // find subject
+
+            Subject subject = _manager.findSubject(id);
+
+            // check if found
+
+            if (subject != null) {
+                // add it to the student
+
+                boolean success = student.removeSubject(subject);
+
+                // feedback msg
+
+                if (success) {
+                    System.out.println("Subject removed!");
+                } else {
+                    System.out.println("The student doesn't have that suject");
+                }
+
             } else {
                 System.out.println("Subject not found!");
             }
@@ -136,11 +201,28 @@ public class App {
         }
     }
 
+    private void promptFindSubject() {
+        // get id as input
+
+        System.out.print("Introduce subject id: ");
+        int id = Integer.parseInt(_input.nextLine());
+
+        // find subject
+
+        Subject subject = _manager.findSubject(id);
+
+        if (subject != null) {
+            subject.prettyPrint();
+        } else {
+            System.out.println("Subject not found");
+        }
+    }
+
     private void promptSelectAction() {
         // get command as input
 
         System.out.print("Introduce command, 'h' for help: ");
-        char command = Character.toLowerCase(_input.nextLine().charAt(0));
+        String command = _input.nextLine().toLowerCase();
 
         // action for each command
 
@@ -159,6 +241,18 @@ public class App {
                 break;
             case COMMAND_REMOVE:
                 promptRemoveStudent();
+                break;
+            case COMMAND_ADD_SUBJECT_TO_STUDENT:
+                promptAddSubjectToStudent();
+                break;
+            case COMMAND_REMOVE_SUBJECT_FROM_STUDENT:
+                promptRemoveSubjectFromStudent();
+                break;
+            case COMMAND_LIST_SUBJECTS:
+                _manager.printSubjects();
+                break;
+            case COMMAND_FIND_SUBJECT:
+                promptFindSubject();
                 break;
             case COMMAND_SAVE:
                 _manager.saveSubjectsFile("data/subjects.txt");

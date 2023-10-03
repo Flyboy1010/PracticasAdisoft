@@ -26,18 +26,22 @@ public class Student {
         return _subjects;
     }
 
-    public void addSubject(Subject subject) { // returns true if success
-        boolean alreadyAdded = _subjects.contains(subject);
+    public boolean addSubject(Subject subject) { // returns true if success
+        boolean contains = _subjects.contains(subject);
 
-        if (!alreadyAdded) {
+        if (!contains) {
             _subjects.add(subject);
             subject.addStudent(this);
         }
+
+        return !contains;
     }
 
-    public void removeSubject(Subject subject) { // returns true if success
-        _subjects.remove(subject);
+    public boolean removeSubject(Subject subject) { // returns true if success
+        boolean removed = _subjects.remove(subject);
         subject.removeStudent(this);
+
+        return removed;
     }
 
     public void clearSubjects() {

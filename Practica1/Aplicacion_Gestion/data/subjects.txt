@@ -1,4 +1,5 @@
-1234,Gestion de red
-5678,Redes moviles
-9106,Sistemas electronicos de audio y video
-8989,Analisis y diseño de software
+1121,Redes moviles
+1234,Gestión de red
+3141,Radiación y propagación
+9101,Analisis y diseño de software
+5678,Sistemas electronicos de audio y video

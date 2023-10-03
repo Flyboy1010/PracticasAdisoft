@@ -69,6 +69,31 @@ public class Manager {
         }
     }
 
+    // parse subject
+
+    private Subject stringToSubject(String subjectString) {
+        // split into subject fields
+
+        String[] fields = subjectString.split(String.valueOf(SEPARATOR_FIELD));
+
+        // parse basic subject fields
+
+        int id = Integer.parseInt(fields[0]);
+        String name = fields[1];
+
+        // create subject
+
+        return new Subject(name, id);
+    }
+
+    // serialize subject
+
+    private String subjectToString(Subject subject) {
+        // id and name
+
+        return String.valueOf(subject.getID()) + SEPARATOR_FIELD + subject.getName();
+    }
+
     // parse student
 
     private Student stringToStudent(String studentString) {
@@ -105,22 +130,7 @@ public class Manager {
         return student;
     }
 
-    private Subject stringToSubject(String subjectString) {
-        // split into subject fields
-
-        String[] fields = subjectString.split(String.valueOf(SEPARATOR_FIELD));
-
-        // parse basic subject fields
-
-        int id = Integer.parseInt(fields[0]);
-        String name = fields[1];
-
-        // create subject
-
-        return new Subject(name, id);
-    }
-
-    /* Me gustaria declarle mi amor pero solo puedo declarar variables :( */
+    // serialize student
 
     private String studentToString(Student student) {
         StringBuilder studentString = new StringBuilder();
@@ -151,13 +161,7 @@ public class Manager {
         return studentString.toString();
     }
 
-    private String subjectToString(Subject subject) {
-        // id and name
-
-        return String.valueOf(subject.getID()) + SEPARATOR_FIELD + subject.getName();
-    }
-
-    // read subjects file
+    // read subjects file (this has to be loaded before loading the students file)
 
     public void readSubjectsFile(String filePath) {
         try {
@@ -178,12 +182,16 @@ public class Manager {
                 }
             }
 
+            // close
+
+            reader.close();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    // read students file
+    // read students file (load after loading the subjects file)
 
     public void readStudentsFile(String filePath) {
         try {
@@ -203,6 +211,10 @@ public class Manager {
                     _students.put(student.getNIA(), student);
                 }
             }
+
+            // close
+
+            reader.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -224,6 +236,10 @@ public class Manager {
                 writer.newLine();
             }
 
+            // close
+
+            writer.close();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -243,6 +259,10 @@ public class Manager {
                 writer.write(subjectToString(subject));
                 writer.newLine();
             }
+
+            // close
+
+            writer.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
