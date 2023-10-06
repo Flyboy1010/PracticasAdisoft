@@ -25,16 +25,31 @@ public class Subject {
         return _students;
     }
 
-    protected void addStudent(Student student) {
+    public void addStudent(Student student) {
         boolean alreadyAdded = _students.contains(student);
 
         if (!alreadyAdded) {
             _students.add(student);
+            student.addSubject(this);
         }
     }
 
-    protected void removeStudent(Student student) {
-        _students.remove(student);
+    public void removeStudent(Student student) {
+        boolean removed = _students.remove(student);
+
+        if (removed) {
+            student.removeSubject(this);
+        }
+    }
+
+    public void clearStudents() {
+        ArrayList<Student> students = new ArrayList<>(_students);
+
+        for (Student student : students) {
+            student.removeSubject(this);
+        }
+
+        _students.clear();
     }
 
     public void print() {

@@ -24,13 +24,22 @@ public class AddStudentCommand implements Command {
         System.out.print("Introduce new student NIA: ");
         int nia = Integer.parseInt(_input.nextLine());
 
+        // create student
+
+        Student student = new Student(name, nia);
+
         // add newly created student
 
-        _manager.addStudent(new Student(name, nia));
+        _manager.addStudent(student);
+
+        // feedback msg
+
+        System.out.print("Student added: ");
+        student.print();
     }
 
     @Override
     public String getDescription() {
-        return "adds a student with name and NIA";
+        return "adds a new student";
     }
 }

@@ -29,6 +29,8 @@ public class Student {
     public boolean addSubject(Subject subject) { // returns true if success
         boolean contains = _subjects.contains(subject);
 
+        // if the subject is not in the vector add it and add the student to the subject aswell
+
         if (!contains) {
             _subjects.add(subject);
             subject.addStudent(this);
@@ -39,13 +41,20 @@ public class Student {
 
     public boolean removeSubject(Subject subject) { // returns true if success
         boolean removed = _subjects.remove(subject);
-        subject.removeStudent(this);
+
+        // if the subject is removed, also remove the student from the subject aswell
+
+        if (removed) {
+            subject.removeStudent(this);
+        }
 
         return removed;
     }
 
     public void clearSubjects() {
-        for (Subject subject : _subjects) {
+        ArrayList<Subject> subjects = new ArrayList<>(_subjects);
+
+        for (Subject subject : subjects) {
             subject.removeStudent(this);
         }
 

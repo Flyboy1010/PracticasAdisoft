@@ -12,7 +12,7 @@ public class Manager {
     private HashMap<Integer, Subject> _subjects = new HashMap<>();
     private HashMap<Integer, Student> _students = new HashMap<>();
 
-    // find subject
+    // find, add, remove subject
 
     public Subject findSubject(int subjectID) {
         if (_subjects.containsKey(subjectID)) {
@@ -20,6 +20,15 @@ public class Manager {
         }
 
         return null;
+    }
+
+    public void addSubject(Subject subject) {
+        _subjects.put(subject.getID(), subject);
+    }
+
+    public void removeSubject(Subject subject) {
+        subject.clearStudents();
+        _subjects.remove(subject.getID());
     }
 
     // find, add, remove student

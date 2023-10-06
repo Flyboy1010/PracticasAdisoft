@@ -18,15 +18,19 @@ public class App {
     public App() {
         // register commands
 
-        _commandRegistry.registerCommand("help", new HelpCommand(_commandRegistry));
-        _commandRegistry.registerCommand("list", new ListStudentsCommand(_manager));
-        _commandRegistry.registerCommand("find", new FindStudentCommand(_manager, _input));
-        _commandRegistry.registerCommand("add", new AddStudentCommand(_manager, _input));
-        _commandRegistry.registerCommand("remove", new RemoveStudentCommand(_manager, _input));
-        _commandRegistry.registerCommand("add_s", new AddSubjectToStudentCommand(_manager,_input));
-        _commandRegistry.registerCommand("remove_s", new RemoveSubjectFromStudentCommand(_manager, _input));
-        _commandRegistry.registerCommand("save", new SaveCommand(_manager));
-        _commandRegistry.registerCommand("quit", new QuitCommand(this));
+        _commandRegistry.registerCommand("help" , new HelpCommand(_commandRegistry));
+        _commandRegistry.registerCommand("lst"  , new ListStudentsCommand(_manager));
+        _commandRegistry.registerCommand("fst"  , new FindStudentCommand(_manager, _input));
+        _commandRegistry.registerCommand("ast"  , new AddStudentCommand(_manager, _input));
+        _commandRegistry.registerCommand("rst"  , new RemoveStudentCommand(_manager, _input));
+        _commandRegistry.registerCommand("asbst", new AddSubjectToStudentCommand(_manager,_input));
+        _commandRegistry.registerCommand("rsbst", new RemoveSubjectFromStudentCommand(_manager, _input));
+        _commandRegistry.registerCommand("s"    , new SaveCommand(_manager));
+        _commandRegistry.registerCommand("q"    , new QuitCommand(this));
+        _commandRegistry.registerCommand("lsb"  , new ListSubjectsCommand(_manager));
+        _commandRegistry.registerCommand("fsb"  , new FindSubjectCommand(_manager, _input));
+        _commandRegistry.registerCommand("asb"  , new AddSubjectCommand(_manager, _input));
+        _commandRegistry.registerCommand("rsb"  , new RemoveSubjectCommand(_manager, _input));
 
         // load subject & student files, (the order is important, do not change)
 
