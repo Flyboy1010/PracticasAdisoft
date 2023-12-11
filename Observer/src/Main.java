@@ -9,10 +9,6 @@ public class Main {
         // Agregar observadores al objeto observable
         timer.addObserver(digitalClock);
 
-        // Realizar alguna operación que cambie el estado del objeto observable
-
-        // Resultado esperado: Ambos observadores deberían ser notificados del cambio
-
         while(true) {
             timer.Tick();
 

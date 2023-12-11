@@ -13,27 +13,47 @@ import java.awt.Rectangle;
 
 public class Transition {
 	
-	final int  ARROW_WIDTH = 7;
-	final int  ARROW_HEIGHT= 14;
+	private static final int ARROW_WIDTH = 7;
+	private static final int ARROW_HEIGHT= 14;
 
 	public Node from;
 	public Node to;
 
-	//TODO: Otros atributos que necesites
+	public int targetX = 0;
+	public int targetY = 0;
 	
-	public Transition(Node s, int x1, int y1){
-		//TODO: ...
+	public Transition(Node from){
+		this.from = from;
 	}
 
-	
-	//TODO: otros métodos que necesites
+	public void setTarget(int x, int y) {
+		targetX = x;
+		targetY = y;
+	}
 
+	public void setTargetNode(Node target) {
+		to = target;
+	}
+
+	// draw
 	public void draw(Graphics g){
 		Graphics2D g2 = (Graphics2D)g;
 		
 		Line2D.Double line = new Line2D.Double();
 
-		//TODO: Dibujar	
+		// check if the to node is null
+		if (to == null) {
+			line = new Line2D.Double(from.getX() + from.getWidth() / 2.0f, from.getY() + from.getHeight() / 2.0f, targetX, targetY);
+		} else {
+			if (from == to) {
+
+			} else {
+				line = new Line2D.Double(from.getX() + from.getWidth() / 2.0f, from.getY() + from.getHeight() / 2.0f, to.getX() + to.getWidth() / 2.0f, to.getY() + to.getHeight() / 2.0f);
+			}
+		}
+
+		//TODO: Dibujar
+		g2.draw(line);
 	}
 	
 }

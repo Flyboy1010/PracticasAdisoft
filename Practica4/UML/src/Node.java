@@ -7,6 +7,7 @@ public class Node {
 	protected int x, y;
 	protected int width, height;
 	protected String name;
+	protected boolean isSelected = false;
 	
 	public Node() {
 		//TODO: ...
@@ -21,13 +22,19 @@ public class Node {
 	
 	//Otros metodos
 
-	public void SetPosition(int x, int y) {
+	public void setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	public int GetX() { return x; }
-	public int GetY() { return y; }
+	public int getWidth() { return width; }
+	public int getHeight() { return height; }
 
-	public String GetName() { return name; }
+	public int getX() { return x; }
+	public int getY() { return y; }
+
+	public void select() { isSelected = true; }
+	public void deselect() { isSelected = false; }
+
+	public String getName() { return name; }
 }

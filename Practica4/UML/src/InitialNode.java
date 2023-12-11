@@ -1,14 +1,11 @@
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-//TODO: otros import
-
+import java.awt.*;
 
 
 public class InitialNode extends Node{
 	private static int number = 1;
 
-	final int  INODE_WIDTH = 20;
-	final int  INODE_HEIGTH = 20;
+	private static final int INODE_WIDTH = 20;
+	private static final int INODE_HEIGTH = 20;
 	
 	//TODO: otros atributos
 		
@@ -20,10 +17,20 @@ public class InitialNode extends Node{
 
 		number++;
 	}
-	
+
+	@Override
 	public void draw(Graphics g){
 		Graphics2D g2 = (Graphics2D)g;
-		//TODO: dibujar el nodo
+
+		// check if selected
+
+		if (isSelected) {
+			g2.setColor(Color.cyan);
+		} else {
+			g2.setColor(Color.black);
+		}
+
+		// dibujar el nodo como un circulo
 		g2.fillOval(x, y, width, height);
 	}
 	
