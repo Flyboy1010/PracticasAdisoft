@@ -34,5 +34,8 @@ public class InitialNode extends Node{
 		g2.fillOval(x, y, width, height);
 	}
 	
-	//TODO: otros métodos
+	@Override
+	public boolean canBeEndOfTransition() {
+		return false;
+	}
 }

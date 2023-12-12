@@ -37,4 +37,12 @@ public class Node {
 	public void deselect() { isSelected = false; }
 
 	public String getName() { return name; }
+
+	public boolean canBeOriginOfTransition() {
+		return true;
+	}
+
+	public boolean canBeEndOfTransition() {
+		return true;
+	}
 }

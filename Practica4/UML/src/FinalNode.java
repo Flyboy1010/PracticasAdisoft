@@ -50,4 +50,9 @@ public class FinalNode extends Node{
 		}
 		g2.draw(circulo);
 	}
+
+	@Override
+	public boolean canBeOriginOfTransition() {
+		return false;
+	}
 }

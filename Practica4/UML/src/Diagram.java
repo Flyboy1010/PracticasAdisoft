@@ -103,6 +103,9 @@ public class Diagram extends JPanel implements MouseListener, MouseMotionListene
             if (nodeToBeDeleted != null) {
                 nodes.remove(nodeToBeDeleted);
             }
+
+            // update number of nodes
+            window.updateNNodes();
         }
 
         repaint(); // call repaint() method
@@ -125,7 +128,7 @@ public class Diagram extends JPanel implements MouseListener, MouseMotionListene
     public void mouseClicked(MouseEvent e) {}
 
     /********************************************/
-    /** MÈtodos de MouseMotionListener         **/
+    /** Metodos de MouseMotionListener         **/
     /********************************************/
 
     public void mouseMoved(MouseEvent e) {
@@ -150,7 +153,7 @@ public class Diagram extends JPanel implements MouseListener, MouseMotionListene
     }
 
     /********************************************/
-    /** MÈtodos de KeyListener                 **/
+    /** Metodos de KeyListener                 **/
     /********************************************/
     public void keyPressed(KeyEvent e) {
         // when the s key gets pressed
