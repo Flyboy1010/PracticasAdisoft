@@ -3,14 +3,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 public class BookManagementSystem {
     private static JFrame frame = new JFrame("Book Management System");
 
     public static void main(String[] args) {
         // Crear algunos libros de ejemplo
-        BookManager.getInstance().addBook(new Book(1, "Book1", "Author1", 20.0f));
-        BookManager.getInstance().addBook(new Book(2, "Book2", "Author2", 25.0f));
+        BookManager.getInstance();
+        //BookManager.getInstance().addBook(new Book(1, "Book1", "Author1", 20.0f));
+        //BookManager.getInstance().addBook(new Book(2, "Book2", "Author2", 25.0f));
 
         // Crear y configurar la ventana principal
 

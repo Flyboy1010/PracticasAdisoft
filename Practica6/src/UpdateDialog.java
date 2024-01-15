@@ -5,21 +5,35 @@ import java.awt.event.ActionListener;
 
 public class UpdateDialog extends JDialog {
     private JTextField idField, titleField, authorField, priceField;
-    private JTextArea bookInfoArea;
 
     public UpdateDialog(JFrame parent) {
         super(parent, "Modificar Libro", true);
         initializeComponents();
-        setSize(400, 300);
+        setSize(300, 200);
         setLocationRelativeTo(parent);
     }
 
     private void initializeComponents() {
-        JPanel panel = new JPanel(new GridLayout(6, 3));
+        JPanel panel = new JPanel(new GridLayout(5, 2));
 
-        panel.add(new JLabel("Identificador:"));
+        panel.add(new JLabel("ID:"));
         idField = new JTextField();
         panel.add(idField);
+
+        panel.add(new JLabel("Título:"));
+        titleField = new JTextField();
+        titleField.setEditable(false);
+        panel.add(titleField);
+
+        panel.add(new JLabel("Autor:"));
+        authorField = new JTextField();
+        authorField.setEditable(false);
+        panel.add(authorField);
+
+        panel.add(new JLabel("Precio:"));
+        priceField = new JTextField();
+        priceField.setEditable(false);
+        panel.add(priceField);
 
         JButton searchButton = new JButton("Buscar");
         searchButton.addActionListener(new ActionListener() {
@@ -29,23 +43,6 @@ public class UpdateDialog extends JDialog {
             }
         });
         panel.add(searchButton);
-
-        panel.add(new JLabel("Título:"));
-        titleField = new JTextField();
-        panel.add(titleField);
-
-        panel.add(new JLabel("Autor:"));
-        authorField = new JTextField();
-        panel.add(authorField);
-
-        panel.add(new JLabel("Precio:"));
-        priceField = new JTextField();
-        panel.add(priceField);
-
-        bookInfoArea = new JTextArea();
-        bookInfoArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(bookInfoArea);
-        panel.add(scrollPane);
 
         JButton updateButton = new JButton("Modificar");
         updateButton.addActionListener(new ActionListener() {
@@ -59,20 +56,31 @@ public class UpdateDialog extends JDialog {
         getContentPane().add(panel);
     }
 
+    private void enableComponentsEditable(boolean editable)
+    {
+        titleField.setEditable(editable);
+        authorField.setEditable(editable);
+        priceField.setEditable(editable);
+    }
+
     private void searchBook() {
         try {
             int id = Integer.parseInt(idField.getText());
             Book foundBook = BookManager.getInstance().findBookById(id);
 
             if (foundBook != null) {
-                // Mostrar la información del libro encontrado
-                bookInfoArea.setText(foundBook.toString());
                 // Rellenar los campos de texto con los valores actuales del libro
                 titleField.setText(foundBook.getTitle());
                 authorField.setText(foundBook.getAuthor());
                 priceField.setText(String.valueOf(foundBook.getPrice()));
+
+                // set editable components to true
+                enableComponentsEditable(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Libro no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+
+                // set editable components to false
+                enableComponentsEditable(false);
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Ingrese un identificador válido", "Error", JOptionPane.ERROR_MESSAGE);
@@ -82,14 +90,19 @@ public class UpdateDialog extends JDialog {
     private void updateBook() {
         try {
             int id = Integer.parseInt(idField.getText());
-            String title = titleField.getText();
-            String author = authorField.getText();
-            float price = Float.parseFloat(priceField.getText());
 
-            Book updatedBook = new Book(id, title, author, price);
-            BookManager.getInstance().updateBook(updatedBook);
+            if (BookManager.getInstance().findBookById(id) != null) {
 
-            JOptionPane.showMessageDialog(this, "Libro modificado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                Book book = new Book(id, titleField.getText(), authorField.getText(), Float.parseFloat(priceField.getText()));
+                BookManager.getInstance().updateBook(book);
+
+                JOptionPane.showMessageDialog(this, "Libro modificado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Libro no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
             dispose();  // Cierra el diálogo después de la modificación exitosa
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Ingrese valores válidos", "Error", JOptionPane.ERROR_MESSAGE);

@@ -4,8 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class DeleteDialog extends JDialog {
-    private JTextField idField;
-    private JTextArea bookInfoArea;
+    private JTextField idField, titleField, authorField, priceField;
 
     public DeleteDialog(JFrame parent) {
         super(parent, "Borrar Libro", true);
@@ -15,11 +14,26 @@ public class DeleteDialog extends JDialog {
     }
 
     private void initializeComponents() {
-        JPanel panel = new JPanel(new GridLayout(3, 2));
+        JPanel panel = new JPanel(new GridLayout(5, 2));
 
-        panel.add(new JLabel("Identificador:"));
+        panel.add(new JLabel("ID:"));
         idField = new JTextField();
         panel.add(idField);
+
+        panel.add(new JLabel("Título:"));
+        titleField = new JTextField();
+        titleField.setEditable(false);
+        panel.add(titleField);
+
+        panel.add(new JLabel("Autor:"));
+        authorField = new JTextField();
+        authorField.setEditable(false);
+        panel.add(authorField);
+
+        panel.add(new JLabel("Precio:"));
+        priceField = new JTextField();
+        priceField.setEditable(false);
+        panel.add(priceField);
 
         JButton searchButton = new JButton("Buscar");
         searchButton.addActionListener(new ActionListener() {
@@ -30,11 +44,6 @@ public class DeleteDialog extends JDialog {
         });
         panel.add(searchButton);
 
-        bookInfoArea = new JTextArea();
-        bookInfoArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(bookInfoArea);
-        panel.add(scrollPane);
-
         JButton deleteButton = new JButton("Borrar");
         deleteButton.addActionListener(new ActionListener() {
             @Override
@@ -42,6 +51,7 @@ public class DeleteDialog extends JDialog {
                 deleteBook();
             }
         });
+
         panel.add(deleteButton);
 
         getContentPane().add(panel);
@@ -54,7 +64,9 @@ public class DeleteDialog extends JDialog {
 
             if (foundBook != null) {
                 // Mostrar la información del libro encontrado
-                bookInfoArea.setText(foundBook.toString());
+                titleField.setText(foundBook.getTitle());
+                authorField.setText(foundBook.getAuthor());
+                priceField.setText(Float.toString(foundBook.getPrice()));
             } else {
                 JOptionPane.showMessageDialog(this, "Libro no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -66,10 +78,15 @@ public class DeleteDialog extends JDialog {
     private void deleteBook() {
         try {
             int id = Integer.parseInt(idField.getText());
-            BookManager.getInstance().removeBook(id);
+            Book foundBook = BookManager.getInstance().findBookById(id);
 
-            JOptionPane.showMessageDialog(this, "Libro borrado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            dispose();  // Cierra el diálogo después del borrado exitoso
+            if (foundBook != null) {
+                BookManager.getInstance().removeBook(foundBook.getId());
+                JOptionPane.showMessageDialog(this, "Libro borrado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Libro no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Ingrese un identificador válido", "Error", JOptionPane.ERROR_MESSAGE);
         }

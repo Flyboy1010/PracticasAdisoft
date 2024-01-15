@@ -52,6 +52,12 @@ public class CreateDialog extends JDialog {
             String author = authorField.getText();
             float price = Float.parseFloat(priceField.getText());
 
+            // check if id already exists (then throw exception)
+            Book book = BookManager.getInstance().findBookById(id);
+            if (book != null) {
+                throw new DuplicateIdException("Id " + id + " already exists");
+            }
+
             Book newBook = new Book(id, title, author, price);
             BookManager.getInstance().addBook(newBook);
 
@@ -59,6 +65,10 @@ public class CreateDialog extends JDialog {
             dispose();  // Cierra el diálogo después de la creación exitosa
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Ingrese valores válidos para ID y Precio", "Error", JOptionPane.ERROR_MESSAGE);
+
+        } catch (DuplicateIdException e) {
+            System.out.println(e);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
